@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+  <style>
+    .form-group {
+      text-align: center;
+    }
+  </style>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+    <canvas id="myChart" width="800" height="500"></canvas>
+<script>
+var a1 = {
+  label: 'vt51',
+  borderColor: 'blue',
+  data: [ {{ s1 | safe }}
+  ]
+};
+
+var a2 = {
+  label: 'båga',
+  borderColor: 'red',
+  data: [ {{ s2 | safe }}
+  ]
+};
+
+var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+  type: 'line',
+  data: { datasets: [a1, a2] },
+  options: {
+    scales: {
+      xAxes: [{
+        type: 'time',
+        time: { displayFormats: { minute: 'HH:mm' } }
+      }],
+      yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+    }
+  }
+});
+</script>
+  </center>
+</body>
+</html>
