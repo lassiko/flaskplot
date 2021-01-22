@@ -13,6 +13,11 @@ app = Flask(__name__)
 
 def line():
 
+    x1 = []
+    y1 = []
+    x2 = []
+    y2 = []
+
     weather_vt51_url = "http://opendata.fmi.fi/wfs?request=getFeature&storedquery_id=livi::observations::road::multipointcoverage&fmisid=100013&parameters=TA,RH,TD,WS,WD,WG"
     data = requests.get(weather_vt51_url)
     root = ET.fromstring(data.text)
@@ -46,9 +51,9 @@ def line():
             observation.append(float(me3[j]))
         observations.append(observation)
 
-    ser1 = ""
     for t in range (len(observations)):
-        ser1 = ser1 + "{ x: '" + observations[t][0] + "', y: " + str(observations[t][1]) + "},"
+        x1.append(observations[t][0])
+        y1.append(observations[t][1])
 
     weather_baga_url = "http://opendata.fmi.fi/wfs?request=getFeature&storedquery_id=fmi::observations::weather::multipointcoverage&fmisid=100969&parameters=Temperature,Humidity,DewPoint,WindSpeedMS,WindDirection,WindGust"
     data = requests.get(weather_baga_url)
@@ -83,11 +88,18 @@ def line():
             observation.append(float(me3[j]))
         observations2.append(observation)
 
-    ser2 = ""
     for t in range (len(observations2)):
-        ser2 = ser2 + "{ x: '" + observations2[t][0] + "', y: " + str(observations2[t][1]) + "},"
+        x2.append(observations2[t][0])
+        y2.append(observations2[t][1])
+    
+    miny = min(min(y1),min(y2))
+    maxy = max(max(y1),max(y2))
+    ran = max(maxy-miny,10)
+    minv = int(int(miny/5.0)*5.0)-5
+    maxv = int(int(maxy/5.0)*5.0)+5
 
-    return render_template('line_chart.html', title='Inkoo-temp', max=40, s1=ser1, s2=ser2)
+
+    return render_template('line_chart.html', title='Inkoo-temp', xa=x1, ya=y1, xb=x2, yb=y2, sy=maxv, py=minv)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)

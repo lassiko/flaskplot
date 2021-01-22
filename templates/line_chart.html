@@ -15,41 +15,34 @@
 <body>
   <center>
     <h1>{{ title }}</h1>
-    <canvas id="myChart" width="800" height="500"></canvas>
-<script>
-var a1 = {
-  label: 'vt51',
-  borderColor: 'blue',
-  data: [ {{ s1 | safe }}
-  ]
-};
-
-var a2 = {
-  label: 'båga',
-  borderColor: 'red',
-  data: [ {{ s2 | safe }}
-  ]
-};
-
-var ctx = document.getElementById('myChart').getContext('2d');
-var chart = new Chart(ctx, {
-  type: 'line',
-  data: { datasets: [a1, a2] },
-  options: {
-    scales: {
-      xAxes: [{
-        type: 'time',
-        time: { displayFormats: { minute: 'HH:mm' } }
-      }],
-      yAxes: [{
-            ticks: {
-                beginAtZero: true
-            }
-        }]
-    }
-  }
-});
-</script>
+    <div id="temps" width="30"></div>
+    <script>
+      /* JAVASCRIPT CODE GOES HERE */
+    var traces =   {
+        x: {{ xa | safe }},
+        y: {{ ya }},
+        type: 'scatter',
+        mode: 'markers+lines',
+        name: 'vt51'
+      };
+    var traceg =   {
+        x: {{ xb | safe }},
+        y: {{ yb }},
+        type: 'scatter',
+        mode: 'markers+lines',
+        name: 'båga'
+      };
+    var datas = [
+      traceg, traces
+    ];
+    var layouts = {
+      title: '°C',
+      height: 400,
+      yaxis: {range: [{{py}},{{sy}}]}
+    };
+    var configs = {responsive: true}
+    Plotly.newPlot('temps', datas, layouts, configs);
+    </script>
   </center>
 </body>
 </html>
